@@ -1,10 +1,10 @@
 #include <iostream>
 #include <SFML/Graphics.hpp>
-#include <SFML/Graphics/RoundedRectangleShape.hpp>
+#include "RoundedRectangleShape.hpp"
 
 int main()
 {
-    auto window = sf::RenderWindow{ { 1920u, 1080u }, "cricletter" };
+    auto window = sf::RenderWindow{ { 1920u, 1080u }, "circletter" };
     window.setFramerateLimit(60);
     sf::Event event;
     float mouseX;
