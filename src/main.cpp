@@ -5,15 +5,31 @@
 int main()
 {
     auto window = sf::RenderWindow{ { 1920u, 1080u }, "circletter" };
-    window.setFramerateLimit(60);
+    window.setFramerateLimit(144);
     sf::Event event;
+
     float mouseX;
     float mouseY;
+
+    //loading in the background file
     sf::Texture backgroundTexture;
-    std::string levelLeters = "retstel";
     if (!backgroundTexture.loadFromFile("./background.jpg")) {
         std::cout << "Failed to load background texture" << std::endl;
+        return EXIT_FAILURE;
     }
+
+    //todo: remove fonts not needed to reduce filesize
+    //loading the font
+    sf::Font font;
+    if (!font.loadFromFile("./OpenSans-Regular.ttf")) {
+        std::cout << "Failed to load font" << std::endl;
+        return EXIT_FAILURE;
+    }
+
+
+    //temp letters to be replaced once old code is added
+    std::string levelLetters = "retstel";
+
     while (window.isOpen())
     {
         while (window.pollEvent(event)) {
@@ -58,17 +74,42 @@ int main()
         letterDisplay.setFillColor(sf::Color(75, 75, 75, 224));
         letterDisplay.setPosition(window.getView().getSize().x/2-letterDisplay.getRadius(), window.getView().getSize().y/1.3-letterDisplay.getRadius());
 
-        //make the circle that follows mouse
+        //make the circle that follows mouse (mostly for debug)
         sf::CircleShape mouseChaser(25.f);
         mouseChaser.setFillColor(sf::Color(50, 255, 50, 192));
         mouseChaser.setPosition(mouseX-mouseChaser.getRadius(), mouseY-mouseChaser.getRadius());
+        //std::cout << "Mouse Position: " << mouseX << ", " << mouseY << std::endl;
+
+        //draw the rest of the fucking owl
+        /*
+         *step 1: get letters and words from old code
+         *-todo: skipping this for now to make things a little simpler, going to clean up old code and make it a header file at some point
+         *step 2: add letters to circle
+         *-todo: set relative coords of each letter to the circle and make some formula to take x number of letters and make a layout
+         *step 3: determine layout
+         *-todo: some sort of crossword formula?
+         *step 4: draw the layout
+         *-todo: make some rounded rectangles and follow the layout from step 3
+         *step 5: make all the input or something idk i just work here
+         *todo: add handling for dragging over letters and typing the letters
+        */
+
+        //add letters to the circle
+        sf::Text letter1(levelLetters[0], font, 500);
+        sf::FloatRect letter1Bounds = letter1.getLocalBounds();
+        letter1.setOrigin(letter1Bounds.width/2, letter1Bounds.height/2);
+        letter1.setScale(1.0/levelLetters.length()*2*letterDisplay.getRadius()/letter1Bounds.width,1.75/levelLetters.length()*letterDisplay.getRadius()/letter1Bounds.height);
+        letter1.setPosition(letterDisplay.getRadius()+letterDisplay.getPosition().x,letterDisplay.getPosition().y);
 
         //add stuff to buffer
         window.draw(background);
         window.draw(letterDisplay);
         window.draw(mouseChaser);
+        window.draw(letter1);
 
         //display the buffer
         window.display();
+
+        std::cout << "\n" << std::endl;
     }
 }
